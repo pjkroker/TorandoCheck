@@ -83,7 +83,7 @@ if __name__ == '__main__':
     )
 
     # Wait a bit to ensure the process has time to write logs
-    time.sleep(120)
+    time.sleep(120) # TODO run with more time
 
     #for line in container.logs(stream=True):
         #print(line.decode().strip())
