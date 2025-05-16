@@ -14,33 +14,35 @@ logging.debug("---Set up Docker---")
 client = docker.from_env()
 # Path to your Dockerfile
 dockerfile_path = '/Users/paul/paul_data/projects_cs/jdoc_randoop/dockerfile'  # Assuming Dockerfile is in the current directory
-image_name = 'my_python_image'
+image = 'my-container2'
 
-# Build the image
-try:
-    # Open the Dockerfile in read mode and pass it to the build process
-    with open(dockerfile_path, 'rb') as dockerfile:
-        image, logs = client.images.build(
-            fileobj=dockerfile,  # Pass the file object directly
-            tag=image_name,  # Use the correct image name
-            rm=True  # Clean up intermediate containers
-        )
+#Build the image
+# try:
+#     # Open the Dockerfile in read mode and pass it to the build process
+#     with open(dockerfile_path, 'rb') as dockerfile:
+#         image, logs = client.images.build(
+#             fileobj=dockerfile,  # Pass the file object directly
+#             tag=image_name,  # Use the correct image name
+#             rm=True  # Clean up intermediate containers
+#         )
+#
+#         # Print logs to see build output
+#         for log in logs:
+#             # Each log is a dictionary; print the 'stream' key, if it exists
+#             if 'stream' in log:
+#                 print(log['stream'].strip())  # Print the stream content (log output)
+#             elif 'error' in log:
+#                 print(f"Error: {log['error'].strip()}")  # Print error messages, if any
+#             else:
+#                 print(f"Unknown log entry: {log}")  # Handle any unexpected log entries
+#
+# except Exception as e:
+#     print("FEHLER")
+#     print(f"Error: {e}")
+#
+#     exit(1)
 
-        # Print logs to see build output
-        for log in logs:
-            # Each log is a dictionary; print the 'stream' key, if it exists
-            if 'stream' in log:
-                print(log['stream'].strip())  # Print the stream content (log output)
-            elif 'error' in log:
-                print(f"Error: {log['error'].strip()}")  # Print error messages, if any
-            else:
-                print(f"Unknown log entry: {log}")  # Handle any unexpected log entries
-
-except Exception as e:
-    print("FEHLER")
-    print(f"Error: {e}")
-
-    exit(1)
+logging.debug("---Docker Finish---")
 #image = "ubuntu:latest"
 #image = "maven:3.8.6-jdk-8"
 #client.images.pull(image)
@@ -80,20 +82,24 @@ if __name__ == '__main__':
         tty=True,  # Add this
         stdin_open=True,  # And this
         detach=True,
+        stdout=True,  # capture stdout
+        stderr=True,
     )
 
     # Wait a bit to ensure the process has time to write logs
     #time.sleep(240) # TODO run with more time, check if this is really necessary
 
 
-    output = container.logs(stdout=True, stderr=True).decode()
+    #output = container.logs(stdout=True, stderr=True).decode()
 
     exit_code = container.wait()["StatusCode"]
     logging.debug(f"Container exited with code {exit_code}")
     logging.debug("Docker output")
-    logging.debug(output)
-    for line in container.logs(stream=True):
-        print(line.decode().strip())
+    # Print the output
+    print(container.logs(stdout=True, stderr=True).decode('utf-8'))
+    #logging.debug(output)
+    # for line in container.logs(stream=True):
+    #     print(line.decode().strip())
     # Get output
     logging.debug("---2.2. Parse Oracles for specified Method---")
     logging.info("---3. Generate Error Revealing Tests using Randoop---")

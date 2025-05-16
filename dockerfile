@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get update && apt-get install -y maven
 RUN readlink -f /usr/bin/java
 
+# Install git
+RUN apt-get update && apt-get install -y git
 # Set Maven environment variables
 #ENV MAVEN_HOME=/opt/apache-maven-3.9.8
 #ENV PATH=$MAVEN_HOME/bin:$PATH
@@ -26,7 +28,10 @@ RUN readlink -f /usr/bin/java
 RUN java -version
 RUN mvn -version
 
-#RUN apt-get install -y libgomp1 libblas3 liblapack-dev libopenblas-dev libnd4j-dev
+RUN git clone https://github.com/albertogoffi/toradocu.git
+WORKDIR /toradocu
+RUN ./gradlew shadowJar -Dhttp.socketTimeout=1800 -Dhttp.connectionTimeout=1800
+
 
 
 WORKDIR /app
