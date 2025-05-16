@@ -3,7 +3,9 @@ echo "Jetzt Commons-Math"
 mvn -f /scripts/commons-math/ clean compile
 echo "Jetzt Toradocu"
 cd /scripts/toradocu/
+pwd
 ./gradlew shadowJar
+echo "Toradocu build complete"
 cd ..
 cd ..
 ls /scripts/commons-math/

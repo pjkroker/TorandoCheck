@@ -83,16 +83,18 @@ if __name__ == '__main__':
     )
 
     # Wait a bit to ensure the process has time to write logs
-    time.sleep(120) # TODO run with more time
+    #time.sleep(240) # TODO run with more time, check if this is really necessary
 
-    #for line in container.logs(stream=True):
-        #print(line.decode().strip())
-    # Get output
+
     output = container.logs(stdout=True, stderr=True).decode()
-    logging.debug("Docker output")
-    logging.debug(output)
+
     exit_code = container.wait()["StatusCode"]
     logging.debug(f"Container exited with code {exit_code}")
+    logging.debug("Docker output")
+    logging.debug(output)
+    for line in container.logs(stream=True):
+        print(line.decode().strip())
+    # Get output
     logging.debug("---2.2. Parse Oracles for specified Method---")
     logging.info("---3. Generate Error Revealing Tests using Randoop---")
     logging.debug("---3.1. Find relevant classes for testing using JDEPS---")
