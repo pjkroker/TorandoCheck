@@ -14,7 +14,7 @@ logging.debug("---Set up Docker---")
 client = docker.from_env()
 # Path to your Dockerfile
 dockerfile_path = '/Users/paul/paul_data/projects_cs/jdoc_randoop/dockerfile'  # Assuming Dockerfile is in the current directory
-image = 'my-container2'
+image = 'toradocu-x86'
 
 #Build the image
 # try:

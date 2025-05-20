@@ -28,9 +28,13 @@ RUN apt-get update && apt-get install -y git
 RUN java -version
 RUN mvn -version
 
+RUN apt-get update && apt-get install -y build-essential
+
 RUN git clone https://github.com/albertogoffi/toradocu.git
 WORKDIR /toradocu
-RUN ./gradlew shadowJar -Dhttp.socketTimeout=1800 -Dhttp.connectionTimeout=1800
+RUN ./gradlew shadowJar -Dhttp.socketTimeout=30000 -Dhttp.connectionTimeout=30000
+
+
 
 
 
