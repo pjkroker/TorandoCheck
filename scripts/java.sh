@@ -12,8 +12,8 @@ ls /toradocu/build/libs/
 #./gradlew shadowJar
 #echo "Toradocu build complete"
 
-echo "generiere zeug"
-java -jar /toradocu/build/libs/toradocu-1.0-all.jar --target-class org.apache.commons.math3.complex.Complex --source-dir /scripts/commons-math/src/main/java/ --class-dir /scripts/commons-math/target/classes/ --randoop-specs toy-specs.json
+echo "generiere oracle"
+java -jar /toradocu/build/libs/toradocu-1.0-all.jar --target-class org.apache.commons.math3.complex.Complex --source-dir /scripts/commons-math/src/main/java/ --class-dir /scripts/commons-math/target/classes/ --randoop-specs /scripts/toy-specs.json
 ls
 #java -version
 #mvn -version
