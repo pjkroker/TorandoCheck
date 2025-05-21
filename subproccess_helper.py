@@ -31,3 +31,27 @@ def run(command, args):
         "pid": proc.pid
     }
     return result
+
+def run_shell(command, shell=False):
+    """
+    Runs a command with optional shell interpretation.
+    Args:
+        command (str or list): Command to run. If shell=True, must be str.
+        shell (bool): Whether to run command through the shell.
+    Returns:
+        dict: Contains stdout, stderr, returncode, pid.
+    """
+    proc = subprocess.Popen(
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        shell=shell
+    )
+    stdout, stderr = proc.communicate()
+    return {
+        "stdout": stdout,
+        "stderr": stderr,
+        "returncode": proc.returncode,
+        "pid": proc.pid
+    }
