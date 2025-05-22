@@ -23,7 +23,7 @@ logging.debug("---Starting Setup---")
 
 
 IMAGE = 'toradocu-x86'
-RANDOOP_TIME_LIMIT = 300
+RANDOOP_TIME_LIMIT = "300"
 
 WORKDIR_A = os.path.dirname(__file__)
 WORKDIR_R=os.sep + os.path.basename(WORKDIR_A)
@@ -129,7 +129,7 @@ if __name__ == '__main__':
         with open(os.path.join(OUTPUTDIR_A, "result.txt"), 'w') as f:
             f.write("postiv")
     else:
-        logging.info("No error-revealing tests were not generated.")
+        logging.info("No error-revealing tests were generated.")
         with open(os.path.join(OUTPUTDIR_A, "result.txt"), 'w') as f:
             f.write("negativ")
 
