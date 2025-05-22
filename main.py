@@ -9,7 +9,7 @@ from subproccess_helper import run, run_shell
 
 # Set up basic configuration for logging
 logging.basicConfig(
-    filename='./output/my_logfile.log',
+    filename='./output/torando_check.log',
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
     force=True
@@ -20,7 +20,7 @@ logging.debug("---Starting Setup---")
 # S_CLASS_NAME = "Complex"
 # FQ_CLASS_NAME = "org.apache.commons.math3.complex.Complex"
 
-
+SEED = "12345"
 
 IMAGE = 'toradocu-x86'
 RANDOOP_TIME_LIMIT = "300"
@@ -52,6 +52,7 @@ logging.debug("---Finishing Setup---")
 
 
 if __name__ == '__main__':
+    error = ""
     logging.info("---1. Load analyzed.json file---")# Contains all information about the method to be analyzed
     with open(os.path.join(WORKDIR_A, "analyzed.json"), 'r') as file:
         analyzed = json.load(file)
@@ -114,7 +115,7 @@ if __name__ == '__main__':
     #--class-path libs/randoop-all-4.3.3.jar:scripts/commons-math/target/classes randoop.main.Main gentests --testclass=org.apache.commons.math3.complex.Complex --classlist=methodlist.txt --time-limit=60 --stop-on-error-test --use-jdk-specifications=false --error-test-basename=ErrorTest
     #TODO Windows ; UNIX :
 
-    result = run_shell(f"java --class-path {os.path.join(WORKDIR_A, "libs", "randoop-all-4.3.3.jar")}:{CLASSDIR_A} randoop.main.Main gentests --testclass={FQ_CLASS_NAME} --classlist={os.path.join(OUTPUTDIR_A, "methodlist.txt")} --time-limit={RANDOOP_TIME_LIMIT} --stop-on-error-test --use-jdk-specifications=false --error-test-basename=ErrorTest --junit-output-dir={OUTPUTDIR_A}",shell=True)
+    result = run_shell(f"java --class-path {os.path.join(WORKDIR_A, "libs", "randoop-all-4.3.3.jar")}:{CLASSDIR_A} randoop.main.Main gentests --testclass={FQ_CLASS_NAME} --classlist={os.path.join(OUTPUTDIR_A, "methodlist.txt")} --time-limit={RANDOOP_TIME_LIMIT} --stop-on-error-test --use-jdk-specifications=false --error-test-basename=ErrorTest --junit-output-dir={OUTPUTDIR_A} --deterministic=true",shell=True)
     logging.debug(result["stderr"])
     logging.debug(result["stdout"])
 
