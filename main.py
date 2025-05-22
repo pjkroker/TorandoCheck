@@ -10,7 +10,7 @@ from subproccess_helper import run, run_shell
 # Set up basic configuration for logging
 logging.basicConfig(
     filename='./output/my_logfile.log',
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
     force=True
 )
