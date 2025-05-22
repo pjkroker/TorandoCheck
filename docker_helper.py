@@ -17,13 +17,14 @@ class DockerHelper:
     def build_container(self):
         raise NotImplementedError("TODO")
 
-    def run_container(self, image, command, volume_path):
+    def run_container(self, image, command, host_volume_path, guest_volume_path):
+
         container = self.client.containers.run(
             image=image,
             command=command,  # This is inside the container
             volumes={
-                volume_path: {  # This is on the host
-                    "bind": "/scripts",  # This will appear inside the container
+                host_volume_path: {  # This is on the host
+                    "bind": guest_volume_path,  # This will appear inside the container
                     "mode": "rw"
                 }
             },

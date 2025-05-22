@@ -10,20 +10,20 @@ from subproccess_helper import run, run_shell
 # Set up basic configuration for logging
 logging.basicConfig(
     filename='./output/my_logfile.log',
-    level=logging.DEBUG,
+    level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     force=True
 )
 logging.debug("---Starting Setup---")
-PACKAGE = "org.apache.commons.math3.complex"
-METHOD_NAME = "add"
-S_CLASS_NAME = "Complex"
-FQ_CLASS_NAME = "org.apache.commons.math3.complex.Complex"
+# PACKAGE = "org.apache.commons.math3.complex"
+# METHOD_NAME = "add"
+# S_CLASS_NAME = "Complex"
+# FQ_CLASS_NAME = "org.apache.commons.math3.complex.Complex"
 
-DOCKERFILE_PATH = '/Users/paul/paul_data/projects_cs/jdoc_randoop/dockerfile'
-VOLUME_PATH = "/Users/paul/paul_data/projects_cs/jdoc_randoop/scripts"
+
+
 IMAGE = 'toradocu-x86'
-RANDOOP_TIME_LIMIT = 60
+RANDOOP_TIME_LIMIT = 300
 
 WORKDIR_A = os.path.dirname(__file__)
 WORKDIR_R=os.sep + os.path.basename(WORKDIR_A)
@@ -45,21 +45,22 @@ logging.debug(f"Corresponding relative paths:  Java Source code is in: {SOURCEDI
 
 logging.debug("---Set up Docker---")
 docker_helper = DockerHelper()
-#build docker file with:
+#build docker image manually from file (replace . with the path to the dockerfile"), container must be x86
+#docker build --progress=plain --platform=linux/amd64 -t toradocu-x86 .
 logging.debug("---Finishing Setup---")
 
 
 
 if __name__ == '__main__':
     logging.info("---1. Load analyzed.json file---")# Contains all information about the method to be analyzed
-    # with open(os.path.join(WORKDIR_A, "analyzed.json"), 'r') as file:
-    #     analyzed = json.load(file)
-    # analyzed = analyzed[0]
+    with open(os.path.join(WORKDIR_A, "analyzed.json"), 'r') as file:
+        analyzed = json.load(file)
+    analyzed = analyzed[0]
 
-    # PACKAGE = analyzed["package"]
-    # METHOD_NAME = analyzed["signature"]["name"]
-    # S_CLASS_NAME = analyzed["parent"]["name"]
-    # FQ_CLASS_NAME = PACKAGE + "." + S_CLASS_NAME
+    PACKAGE = analyzed["package"]
+    METHOD_NAME = analyzed["signature"]["name"]
+    S_CLASS_NAME = analyzed["parent"]["name"]
+    FQ_CLASS_NAME = PACKAGE + "." + S_CLASS_NAME
     CLASS_FILE_A = os.path.join(CLASSDIR_A, FQ_CLASS_NAME.replace(".", os.sep) + ".class")
     logging.debug(f"Generating Tests for: {METHOD_NAME} from {S_CLASS_NAME} in {PACKAGE} (Fully Qualified Class Name is:{FQ_CLASS_NAME})")
     logging.debug(f"Class file should be at: {CLASS_FILE_A}")
@@ -72,7 +73,10 @@ if __name__ == '__main__':
     logging.debug("---2.2. Generate Oracles---") #TODO Do we need AspectJ file? Is this correct ?"[main] INFO org.toradocu.Toradocu - Oracle generator disabled: aspect generation skipped."
     #container = docker_helper.run_container(IMAGE, "sh /scripts/java.sh", VOLUME_PATH)
     #print(f"java -jar /toradocu/build/libs/toradocu-1.0-all.jar --target-class {FQ_CLASS_NAME} --source-dir {"/jdoc_randoop/repository/src/main/java/"} --class-dir {CLASSDIR_R} --randoop-specs {os.path.join(OUTPUTDIR, "toradocu_oracles.json")}")
-    container = docker_helper.run_container(IMAGE, f"java -jar /toradocu/build/libs/toradocu-1.0-all.jar --target-class {FQ_CLASS_NAME} --source-dir {"/jdoc_randoop/repository/src/main/java/"} --class-dir {CLASSDIR_R} --randoop-specs {os.path.join(OUTPUTDIR_R, "toradocu_oracles.json")}", WORKDIR_A)
+    logging.debug(f"Will mount wokrdir on container's filesystem as {os.path.sep + os.path.basename(os.path.normpath(WORKDIR_A))}")
+    container = docker_helper.run_container(IMAGE,
+                                            f"java -jar /toradocu/build/libs/toradocu-1.0-all.jar --target-class {FQ_CLASS_NAME} --source-dir {"/jdoc_randoop/repository/src/main/java/"} --class-dir {CLASSDIR_R} --randoop-specs {os.path.join(OUTPUTDIR_R, "toradocu_oracles.json")}",
+                                            WORKDIR_A, os.path.sep + os.path.basename(os.path.normpath(WORKDIR_A)))
     #container = docker_helper.run_container(IMAGE," ls /jdoc_randoop/repository/target/classes/",WORKDIR_A)
     exit_code = container.wait()["StatusCode"]
     logging.debug(f"Container exited with code {exit_code}")
@@ -117,7 +121,7 @@ if __name__ == '__main__':
 
     logging.info("---4. Write result into result.txt---")
     # Check If error revealing tests have been wirtten do disk or not
-    pattern = os.path.join(WORKDIR_A, "ErrorTest*.java")# Build the full pattern
+    pattern = os.path.join(OUTPUTDIR_A, "ErrorTest*.java")# Build the full pattern
     matches = glob.glob(pattern)# Use glob to find matching files
     if matches:
         logging.info("Error-revealing tests were generated.")
