@@ -87,7 +87,7 @@ if __name__ == '__main__':
     #print(f"java -jar /toradocu/build/libs/toradocu-1.0-all.jar --target-class {FQ_CLASS_NAME} --source-dir {"/jdoc_randoop/repository/src/main/java/"} --class-dir {CLASSDIR_R} --randoop-specs {os.path.join(OUTPUTDIR, "toradocu_oracles.json")}")
     logging.debug(f"Will mount wokrdir on container's filesystem as {os.path.sep + os.path.basename(os.path.normpath(WORKDIR_A))}")
     container = docker_helper.run_container(IMAGE,
-                                            f"java -jar /toradocu/build/libs/toradocu-1.0-all.jar --target-class {FQ_CLASS_NAME} --source-dir {"/jdoc_randoop/repository/src/main/java/"} --class-dir {CLASSDIR_R} --randoop-specs {os.path.join(OUTPUTDIR_R, "toradocu_oracles.json")}",
+                                            f"java -jar /toradocu/build/libs/toradocu-1.0-all.jar --target-class {FQ_CLASS_NAME} --source-dir {SOURCEDIR_R} --class-dir {CLASSDIR_R} --randoop-specs {os.path.join(OUTPUTDIR_R, "toradocu_oracles.json")}",
                                             WORKDIR_A, os.path.sep + os.path.basename(os.path.normpath(WORKDIR_A))) # TODO guest path must be linux
     #container = docker_helper.run_container(IMAGE," ls /jdoc_randoop/repository/target/classes/",WORKDIR_A)
     exit_code = container.wait()["StatusCode"]
