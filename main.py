@@ -22,8 +22,11 @@ logging.debug("---Starting Setup---")
 
 SEED = "12345"
 
-IMAGE = 'toradocu-x86'
-RANDOOP_TIME_LIMIT = "300"
+IMAGE = 'pjkroker/toradocu-x86'
+RANDOOP_TIME_LIMIT = "0" #If nonzero, Randoop is nondeterministic
+RANDOOP_DETERMINISTIC = "true"
+RANDOOP_ATTEMPTED_LIMIT = "10000"
+
 
 WORKDIR_A = os.path.dirname(__file__)
 WORKDIR_R=os.sep + os.path.basename(WORKDIR_A)
@@ -48,6 +51,10 @@ docker_helper = DockerHelper()
 #build docker image manually from file (replace . with the path to the dockerfile"), container must be x86
 #docker build --progress=plain --platform=linux/amd64 -t toradocu-x86 .
 logging.debug("---Finishing Setup---")
+
+
+
+
 
 
 
@@ -77,7 +84,7 @@ if __name__ == '__main__':
     logging.debug(f"Will mount wokrdir on container's filesystem as {os.path.sep + os.path.basename(os.path.normpath(WORKDIR_A))}")
     container = docker_helper.run_container(IMAGE,
                                             f"java -jar /toradocu/build/libs/toradocu-1.0-all.jar --target-class {FQ_CLASS_NAME} --source-dir {"/jdoc_randoop/repository/src/main/java/"} --class-dir {CLASSDIR_R} --randoop-specs {os.path.join(OUTPUTDIR_R, "toradocu_oracles.json")}",
-                                            WORKDIR_A, os.path.sep + os.path.basename(os.path.normpath(WORKDIR_A)))
+                                            WORKDIR_A, os.path.sep + os.path.basename(os.path.normpath(WORKDIR_A))) # TODO guest path must be linux
     #container = docker_helper.run_container(IMAGE," ls /jdoc_randoop/repository/target/classes/",WORKDIR_A)
     exit_code = container.wait()["StatusCode"]
     logging.debug(f"Container exited with code {exit_code}")
@@ -115,7 +122,7 @@ if __name__ == '__main__':
     #--class-path libs/randoop-all-4.3.3.jar:scripts/commons-math/target/classes randoop.main.Main gentests --testclass=org.apache.commons.math3.complex.Complex --classlist=methodlist.txt --time-limit=60 --stop-on-error-test --use-jdk-specifications=false --error-test-basename=ErrorTest
     #TODO Windows ; UNIX :
 
-    result = run_shell(f"java --class-path {os.path.join(WORKDIR_A, "libs", "randoop-all-4.3.3.jar")}:{CLASSDIR_A} randoop.main.Main gentests --testclass={FQ_CLASS_NAME} --classlist={os.path.join(OUTPUTDIR_A, "methodlist.txt")} --time-limit={RANDOOP_TIME_LIMIT} --stop-on-error-test --use-jdk-specifications=false --error-test-basename=ErrorTest --junit-output-dir={OUTPUTDIR_A} --deterministic=true",shell=True)
+    result = run_shell(f"java --class-path {os.path.join(WORKDIR_A, "libs", "randoop-all-4.3.3.jar")}:{CLASSDIR_A} randoop.main.Main gentests --testclass={FQ_CLASS_NAME} --classlist={os.path.join(OUTPUTDIR_A, "methodlist.txt")} --time-limit={RANDOOP_TIME_LIMIT} --stop-on-error-test --use-jdk-specifications=false --error-test-basename=ErrorTest --junit-output-dir={OUTPUTDIR_A} --deterministic={RANDOOP_DETERMINISTIC} --attempted-limit={RANDOOP_ATTEMPTED_LIMIT}",shell=True)
     logging.debug(result["stderr"])
     logging.debug(result["stdout"])
 
