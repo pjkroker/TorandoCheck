@@ -6,6 +6,8 @@ import os
 from docker_helper import DockerHelper
 from subproccess_helper import run, run_shell
 
+# Ensure the folder exists
+os.makedirs('./output', exist_ok=True)
 
 # Set up basic configuration for logging
 logging.basicConfig(
@@ -25,7 +27,7 @@ SEED = "12345"
 IMAGE = 'pjkroker/toradocu-x86'
 RANDOOP_TIME_LIMIT = "0" #If nonzero, Randoop is nondeterministic
 RANDOOP_DETERMINISTIC = "true"
-RANDOOP_ATTEMPTED_LIMIT = "10000"
+RANDOOP_ATTEMPTED_LIMIT = "1000000"
 
 
 WORKDIR_A = os.path.dirname(__file__)
