@@ -33,12 +33,12 @@ RANDOOP_ATTEMPTED_LIMIT = "1000000" #default: 100000000
 WORKDIR_A = os.path.dirname(__file__)
 WORKDIR_R=os.sep + os.path.basename(WORKDIR_A)
 
-REPOSITORY_R = os.path.join(WORKDIR_R, "repository") #TODO Check path if not maven
+REPOSITORY_R = os.path.join(WORKDIR_R, "repository")
 REPOSITORY_A = os.path.join(WORKDIR_A, "repository")
 
-SOURCEDIR_R = os.path.join(REPOSITORY_R, "src", "main", "java") #TODO Check path if not maven project
+SOURCEDIR_R = os.path.join(REPOSITORY_R, "src", "main", "java")
 
-CLASSDIR_R = os.path.join(REPOSITORY_R, "target", "classes")#TODO Check path if not maven
+CLASSDIR_R = os.path.join(REPOSITORY_R, "target", "classes")
 CLASSDIR_A = os.path.join(REPOSITORY_A, "target", "classes")
 
 #OUTPUTDIR_R = os.path.join(WORKDIR_R, "output")
@@ -122,10 +122,8 @@ if __name__ == '__main__':
     logging.debug(f"{METHOD_NAME} has the following dependencies: {result["stdout"]}")
     #TODO Parse methodlist.txt and remove anything from Java STDB
     logging.debug("---3.2. Generate Error Revealing Tests---")
-    #result = run("java",["--class-path", "libs/randoop-all-4.3.3.jar:scripts/commons-math/target/classes", "randoop.main.Main","gentests", "--testclass=org.apache.commons.math3.complex.Complex", "--classlist=methodlist.txt",  "--time-limit=60", "--stop-on-error-test", "--use-jdk-specifications=false", "--error-test-basename=ErrorTest"])
-    #--class-path libs/randoop-all-4.3.3.jar:scripts/commons-math/target/classes randoop.main.Main gentests --testclass=org.apache.commons.math3.complex.Complex --classlist=methodlist.txt --time-limit=60 --stop-on-error-test --use-jdk-specifications=false --error-test-basename=ErrorTest
-    #TODO Windows ; UNIX :
 
+    #TODO Windows ; UNIX :
     result = run_shell(f"java --class-path {os.path.join(WORKDIR_A, "libs", "randoop-all-4.3.3.jar")}:{CLASSDIR_A} randoop.main.Main gentests --testclass={FQ_CLASS_NAME} --classlist={os.path.join(OUTPUTDIR_A, "methodlist.txt")} --time-limit={RANDOOP_TIME_LIMIT} --stop-on-error-test --use-jdk-specifications=false --error-test-basename=ErrorTest --junit-output-dir={OUTPUTDIR_A} --deterministic={RANDOOP_DETERMINISTIC} --attempted-limit={RANDOOP_ATTEMPTED_LIMIT}",shell=True)
     logging.debug(result["stderr"])
     logging.debug(result["stdout"])
@@ -147,12 +145,3 @@ if __name__ == '__main__':
 
     logging.info("---End of the Script--")
 
-
-
-
-#5 minuten time limit
-#nur error revealing tests   nur toradocu specs -use-jdk-specifications=false
-#error teast revealing tests nicht wegwerfen
-#result.txt - postitiv oder negativ
-#classlist nutzen anstatt methodlist
-# java stdbib entfernen aus methodlist.txt
