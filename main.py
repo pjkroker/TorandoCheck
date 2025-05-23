@@ -25,7 +25,7 @@ logging.debug("---Starting Setup---")
 #SEED = "12345" #default: 0
 
 IMAGE = 'pjkroker/toradocu-x86'
-RANDOOP_TIME_LIMIT = "30" #default: 100 (If nonzero, Randoop is nondeterministic)
+RANDOOP_TIME_LIMIT = "300" #default: 100 (If nonzero, Randoop is nondeterministic)
 RANDOOP_DETERMINISTIC = "false" #default: false (If false, Randoop is nondeterministic)
 RANDOOP_ATTEMPTED_LIMIT = "1000000" #default: 100000000
 
