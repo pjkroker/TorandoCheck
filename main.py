@@ -7,11 +7,11 @@ from docker_helper import DockerHelper
 from subproccess_helper import run, run_shell
 
 # Ensure the folder exists
-os.makedirs('./output', exist_ok=True)
+#os.makedirs('./output', exist_ok=True)
 
 # Set up basic configuration for logging
 logging.basicConfig(
-    filename='./output/torando_check.log',
+    filename='log.txt',
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
     force=True
@@ -22,12 +22,12 @@ logging.debug("---Starting Setup---")
 # S_CLASS_NAME = "Complex"
 # FQ_CLASS_NAME = "org.apache.commons.math3.complex.Complex"
 
-SEED = "12345"
+#SEED = "12345" #default: 0
 
 IMAGE = 'pjkroker/toradocu-x86'
-RANDOOP_TIME_LIMIT = "0" #If nonzero, Randoop is nondeterministic
-RANDOOP_DETERMINISTIC = "true"
-RANDOOP_ATTEMPTED_LIMIT = "1000000"
+RANDOOP_TIME_LIMIT = "30" #default: 100 (If nonzero, Randoop is nondeterministic)
+RANDOOP_DETERMINISTIC = "false" #default: false (If false, Randoop is nondeterministic)
+RANDOOP_ATTEMPTED_LIMIT = "1000000" #default: 100000000
 
 
 WORKDIR_A = os.path.dirname(__file__)
@@ -41,8 +41,10 @@ SOURCEDIR_R = os.path.join(REPOSITORY_R, "src", "main", "java") #TODO Check path
 CLASSDIR_R = os.path.join(REPOSITORY_R, "target", "classes")#TODO Check path if not maven
 CLASSDIR_A = os.path.join(REPOSITORY_A, "target", "classes")
 
-OUTPUTDIR_R = os.path.join(WORKDIR_R, "output")
-OUTPUTDIR_A = os.path.join(WORKDIR_A, "output")
+#OUTPUTDIR_R = os.path.join(WORKDIR_R, "output")
+#OUTPUTDIR_A = os.path.join(WORKDIR_A, "output")
+OUTPUTDIR_R = WORKDIR_R
+OUTPUTDIR_A = WORKDIR_A
 
 
 logging.debug(f"Absolute paths: Working Directory is: {WORKDIR_A}, Repository to be analyzed is in: {REPOSITORY_A}, Outputs will be in: {OUTPUTDIR_A}")
