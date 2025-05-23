@@ -1,4 +1,5 @@
 # TorandoCheck
+TorandoCheck combines Toradocu and Randoop to find inconsistencies.
 
 Your project in a folder named `repository` and a file `analyzed.json` should be in the same directory, like this:
 ```
