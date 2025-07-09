@@ -14,3 +14,10 @@ Your project in a folder named `repository` and a file `analyzed.json` should be
 │   ├── src/
 │   └── pom.xml
 ```
+
+
+## Building the Docker Image Manually
+
+If you prefer to build the Docker image locally instead of pulling it from Docker Hub, use the following command:
+
+`docker build --progress=plain --platform=linux/amd64 -t pjkroker/toradocu-x86 .`

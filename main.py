@@ -53,7 +53,7 @@ logging.debug(f"Corresponding relative paths:  Java Source code is in: {SOURCEDI
 logging.debug("---Set up Docker---")
 docker_helper = DockerHelper()
 #build docker image manually from file (replace . with the path to the dockerfile"), container must be x86
-#docker build --progress=plain --platform=linux/amd64 -t toradocu-x86 .
+#docker build --progress=plain --platform=linux/amd64 -t pjkroker/toradocu-x86 .
 logging.debug("---Finishing Setup---")
 
 
